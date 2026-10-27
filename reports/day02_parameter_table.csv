@@ -1,0 +1,32 @@
+image,problem,method,parameter,improved,worse,next_inspection_helpful
+dark.jpg,dark,Brightness,beta=0,기준 이미지,전체적으로 어두워 병뚜껑 세부가 잘 보이지 않음,no
+dark.jpg,dark,Brightness,beta=20,병뚜껑 형태가 조금 더 잘 보임,큰 변화는 적음,yes
+dark.jpg,dark,Brightness,beta=50,병뚜껑과 주변 영역을 확인하기 쉬워짐,밝은 영역도 함께 증가,yes
+dark.jpg,dark,Brightness,beta=80,병뚜껑이 매우 잘 보임,배경과 밝은 부분의 세부정보가 감소하기 시작함,partly
+dark.jpg,dark,Gamma,gamma=0.6,없음,평균 밝기 21.8로 더 어두워져 형태가 묻힘,no
+dark.jpg,dark,Gamma,gamma=0.8,없음,평균 밝기 35.7로 여전히 어두움,no
+dark.jpg,dark,Gamma,gamma=1.0,기준 이미지(dark와 같음),평균 밝기 49.6 · 홈이 잘 안 보임,no
+dark.jpg,dark,Gamma,gamma=1.2,평균 밝기 61.8 · 홈이 보이기 시작,아직 약간 어두움,yes
+dark.jpg,dark,Gamma,gamma=1.5,평균 밝기 79.2 · 어두운 부분이 살아나고 형태가 잘 보임,밝은 부분의 차이가 조금 줄어듦,yes
+dark.jpg,dark,Gamma,gamma=2.0,평균 밝기 102.9 · 전체가 많이 밝아짐,과도할 가능성 · 밝은 영역 세부 감소,partly
+low_contrast.jpg,low_contrast,CLAHE,clip=1.0 · tile=8x8,가장 부드럽게 대비가 조금 살아남,변화가 약함,partly
+low_contrast.jpg,low_contrast,CLAHE,clip=2.0 · tile=8x8,홈과 경계가 조금 더 보임,큰 단점 없음,yes
+low_contrast.jpg,low_contrast,CLAHE,clip=3.0 · tile=8x8,형태가 분명해짐,배경 Texture가 늘기 시작,yes
+low_contrast.jpg,low_contrast,CLAHE,clip=4.0 · tile=8x8,가장 선명해 보임,배경 Texture와 Noise도 함께 강조됨,partly
+noise.jpg,noise,Gaussian,kernel=3x3,잔잔한 Noise가 조금 줄어듦,점 Noise가 상당수 남음,no
+noise.jpg,noise,Gaussian,kernel=7x7,표면이 많이 부드러워짐,경계와 홈도 함께 흐려짐,no
+noise.jpg,noise,Median,kernel=3x3,점 Noise가 크게 줄고 형태가 유지됨,작은 점이 일부 남음,yes
+noise.jpg,noise,Median,kernel=7x7,점 Noise가 가장 적음,홈 무늬가 약해짐,yes
+noise.jpg,noise,Bilateral,d=9 · sigma=75/75,표면이 부드럽고 경계는 비교적 유지,밝은 점이 남음 · 계산량이 큼,partly
+blur.jpg,blur,Sharpening,kernel 3x3 (중앙 5 · 주변 -1),흐려진 경계가 다시 또렷해 보임,Noise도 함께 강조 · 사라진 세부는 복원 못 함,partly
+low_contrast.jpg,low_contrast,Gaussian+Otsu,kernel=5x5,Otsu 118 · 흰색 비율 64.9% · 조금 부드러워짐,전처리 없음과 결과가 거의 같음 · 세부 형태 단순해짐,no
+low_contrast.jpg,low_contrast,CLAHE+Otsu,clip=2.0 · tile=8x8,Otsu 132 · 흰색 비율 64.6% · 형태는 잘 나타남,내부와 아래쪽에 불필요한 영역이 조금 더 생김,no
+challenge.jpg,cap_wall_same_brightness,None,-,비교 기준,뚜껑과 벽이 한 덩어리로 흰색,no
+challenge.jpg,cap_wall_same_brightness,Sharpening,amount=0.5,경계가 조금 또렷해 보임,Otsu 결과 거의 변화 없음,no
+challenge.jpg,cap_wall_same_brightness,Sharpening,amount=1.0,경계가 조금 또렷해 보임,Otsu 결과 거의 변화 없음·잔점 차이만,no
+challenge.jpg,cap_wall_same_brightness,Sharpening,amount=1.5,경계가 더 또렷해 보임,Otsu 결과 거의 변화 없음,no
+challenge.jpg,cap_wall_same_brightness,Lab_b_inverse,255-B,벽이 검정으로 분리되고 뚜껑만 흰색,잔점 많음·가장자리 톱니·링 왼쪽 누락,partly
+challenge.jpg,cap_wall_same_brightness,Lab_b_inverse+Median,255-B / median 7,잔점 44→3개·가장자리 매끈·뚜껑 크기 유지,링 왼쪽 누락(그늘)·결과 사진은 눈으로 보기 어려움,yes
+challenge.jpg,cap_wall_same_brightness,벽 색과의 거리(밝기 포함),벽 4변 평균 Lab 기준 · Median 7,없음,뚜껑 0% · 유리와 그림자만 잡힘,no
+challenge.jpg,cap_wall_same_brightness,벽 색과의 거리(색만 a·b),벽 4변 평균 a·b 기준 · Median 7,벽 0% · 뚜껑 94%,고리 왼쪽 0% · 그늘을 못 잡음,partly
+challenge.jpg,cap_wall_same_brightness,정규화 색 비율 (B-R)/(B+G+R),범위 -0.05~+0.05 → 0~255 · Median 7,뚜껑 100% · 벽 0% 유지 · 값 범위가 넓어 기준값 흔들림에 강함 · 어둡게 테스트에서 벽 오검출 0%(Lab b는 1.7%),고리도 더 크게 잡혀 3일차에 위치·면적으로 걸러야 함 · 이 사진의 색 차이에 의존,yes
