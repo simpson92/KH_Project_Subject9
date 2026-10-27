@@ -28,7 +28,7 @@ python src/XX_파일이름.py        # 일차별 실습 코드 실행 (프로젝
 - 코드: `00_check_env.py` ~ `08_phone_camera_roi.py`
 - 결과: 스마트폰 실시간 영상에서 cap_on / cap_off ROI 저장
 - 핵심: 검사기를 바로 만드는 게 아니라, **어디를 보고 무엇으로 정상·불량을 구분할지** 먼저 정한다
-- Mini Challenge: (작성 예정)
+- Mini Challenge: 주황 뚜껑 약병 5장 · 1차 ROI(바짝)에서 좌우 잘림 → 여유를 둔 최종 ROI로 5장 모두 포함 (판단: ROI를 조금 넓혀야 함)
 - 자세한 기록: [problem_definition](reports/day01_problem_definition.md)
 
 ## Day 02 — Image Enhancement와 검사 영상 품질 개선
