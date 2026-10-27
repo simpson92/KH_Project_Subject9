@@ -1,0 +1,36 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Dataset
+data/
+samples/
+
+# 실행 결과
+outputs/
+
+# 모델
+*.pt
+*.pth
+*.onnx
+*.engine
+
+# 영상
+*.mp4
+*.avi
+*.mov
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 환경설정
+.env
+
+# (추가) Jupyter 자동 생성 폴더 · 2일차 ROI 임시 사진
+.ipynb_checkpoints/
+roi_temp/*.jpg
+
+# Jupyter 노트북
+*.ipynb
