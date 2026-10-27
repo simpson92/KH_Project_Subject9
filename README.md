@@ -15,7 +15,7 @@ python src/XX_파일이름.py        # 일차별 실습 코드 실행 (프로젝
 
 | 폴더 | 내용 | Git |
 |---|---|---|
-| `src/` | 실습 코드 (00~17) | O |
+| `src/` | 실습 코드 (00~23) | O |
 | `reports/` | 일차별 실험 · 판단 기록 | O |
 | `samples/` | 입력 이미지 · 영상 | X |
 | `outputs/` | 코드 실행 결과 이미지 | X |
@@ -39,3 +39,15 @@ python src/XX_파일이름.py        # 일차별 실습 코드 실행 (프로젝
 - 핵심: 사람 눈에 선명한 것보다 **Otsu에서 안정적으로 분리되는 것**이 기준. 근본 해결은 촬영환경 개선
 - 결과 이미지: `outputs/day02/compare/preprocess_compare.png` · `outputs/day02/challenge/`
 - 자세한 기록: [parameter_table](reports/day02_parameter_table.csv) · [preprocess_reason](reports/day02_preprocess_reason.md)
+
+## Day 03 — Morphology · Contour와 규칙 기반 판정
+
+- 배운 것: Opening/Closing · Kernel 3·5·9 비교 · Contour · Area/Area Ratio/Count/BBox/Center
+- 코드: `18_morphology_compare.py` ~ `23_day03_challenge.py`
+- 병뚜껑 Rule: cap_on 0.661 / cap_off 0.459 → 중간값을 기준으로 OK/NG.
+  640×480 재촬영 6장(Reference 2 · Test 4)에서 기준 0.3608 고정 → 4장 모두 일치 (소규모 확인)
+- Challenge: 주황 뚜껑 약병 · HSV 주황 Mask → 가장 큰 덩어리 Area Ratio (ok 0.494 / ng 0.002)
+  → 기준 0.2479 고정 후 새 사진 2장 모두 일치
+- 추가: 원본 → Mask → Contour 3단계 비교 이미지를 직접 만들어 판정 근거를 시각화
+- 핵심: 숫자를 먼저 정하지 않고, 측정한 뒤 기준을 만든다. 기준은 촬영 조건과 한 세트
+- 자세한 기록: [reference_features](reports/day03_reference_features.csv) · [inspection_results](reports/day03_inspection_results.csv) · [rule_analysis](reports/day03_rule_analysis.md)
