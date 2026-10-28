@@ -51,3 +51,13 @@ python src/XX_파일이름.py        # 일차별 실습 코드 실행 (프로젝
 - 추가: 원본 → Mask → Contour 3단계 비교 이미지를 직접 만들어 판정 근거를 시각화
 - 핵심: 숫자를 먼저 정하지 않고, 측정한 뒤 기준을 만든다. 기준은 촬영 조건과 한 세트
 - 자세한 기록: [reference_features](reports/day03_reference_features.csv) · [inspection_results](reports/day03_inspection_results.csv) · [rule_analysis](reports/day03_rule_analysis.md)
+
+## Day 04 — Template · Feature Matching (광천김 로고)
+
+- 배운 것: GrabCut · MeanShift(독립 실습), Template Matching, ORB · SIFT, RANSAC + Homography
+- 코드: `24_day04_prepare.py` ~ `32_day04_challenge.py`
+- 비교: 정면 사진 1장을 코드로 normal · shift · rot15 · scale90 4장으로 바꿔 같은 Reference로 측정
+- 결과: Template은 normal 0.9997이지만 shift(로고가 화면 밖) · rot15에서 실패 / SIFT + Homography는 4장 모두 FOUND (Inlier Ratio 0.97~0.99)
+- Mini Challenge: 실제 재촬영 4장에 SIFT + Homography 선택 → 4장 모두 FOUND, 반사가 있는 tilt_glare만 Ratio 0.721로 가장 낮음
+- 핵심: 변화 종류(위치 · 회전 · 크기 · 반사)를 보고 방법을 고른다. 오늘은 측정까지, 판정 기준은 Day05 Calibration에서
+- 자세한 기록: [reports/day04_rotation_compare.csv](reports/day04_rotation_compare.csv) · [reports/day04_method_selection.md](reports/day04_method_selection.md)
