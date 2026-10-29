@@ -1,0 +1,21 @@
+{
+  "baseline_version": "day05-mini-v1.0",
+  "inspection_target": "드림카카오 72% 노란 라벨 존재 및 정합 검사",
+  "positive_class": "NG",
+  "reference": {
+    "reference_label": "samples/day05/mini_challenge/reference/reference_label.jpg"
+  },
+  "required_rules": {
+    "homography_found": true,
+    "sift_good_matches_min": 44,
+    "inlier_ratio_min": 0.6657
+  },
+  "calibration_result": {
+    "accuracy": 0.6667,
+    "tp": 3,
+    "tn": 1,
+    "fp": 2,
+    "fn": 0
+  },
+  "note": "Calibration 6장(OK 3 · NG 3)으로 35번 방식 1위 후보를 선택. SIFT 기준은 최솟값이라 사실상 Ratio가 판정"
+}
