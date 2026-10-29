@@ -61,3 +61,28 @@ python src/XX_파일이름.py        # 일차별 실습 코드 실행 (프로젝
 - Mini Challenge: 실제 재촬영 4장에 SIFT + Homography 선택 → 4장 모두 FOUND, 반사가 있는 tilt_glare만 Ratio 0.721로 가장 낮음
 - 핵심: 변화 종류(위치 · 회전 · 크기 · 반사)를 보고 방법을 고른다. 오늘은 측정까지, 판정 기준은 Day05 Calibration에서
 - 자세한 기록: [reports/day04_rotation_compare.csv](reports/day04_rotation_compare.csv) · [reports/day04_method_selection.md](reports/day04_method_selection.md)
+
+## Day 05 — Calibration · Rule Freeze · Test
+
+### 목표
+정상/불량 데이터로 OK·NG 기준을 정하고(Calibration), 기준을 JSON으로 고정한 뒤(Freeze), 처음 보는 데이터로 성능을 확인(Test)한다.
+
+### 실습 (광천김 로고 · 33~38)
+| 단계 | 파일 | 결과 |
+|---|---|---|
+| 공통 측정 모듈 | `src/day05_logo_features.py` | Template · SIFT · Homography 측정 함수 |
+| Calibration | `34` · `35` | 12장 측정 → 225개 조합 탐색 |
+| Rule Freeze | `36` → `configs/day05_logo_rules.json` | SIFT ≥ 129 AND Ratio ≥ 0.8664 (v1.0) |
+| Test · 평가 | `37` · `38` | Acc 0.5 · Precision 0.5 · Recall 1.0 (FP 3 · FN 0) |
+
+### Mini Challenge (드림카카오 72% 라벨 · 39)
+- 직접 촬영: Reference 1 · Calibration 6(OK 3 · NG 3) · Test 4(OK 2 · NG 2)
+- Rule `day05-mini-v1.0`: SIFT ≥ 44 AND Inlier Ratio ≥ 0.6657
+- Test: TP 1 · TN 2 · FP 0 · **FN 1** → Accuracy 0.75 · Precision 1.0 · **Recall 0.5**
+- FN 원인: 가운데 "72"만 가린 불량은 나머지 특징점이 그대로 맞아 통과. Calibration NG에 이 유형이 없었음
+- 기록: `reports/day05_mini_challenge.md`
+
+### 배운 점
+- Test를 보고 기준을 바꾸면 Test가 아니다 → Rule은 Freeze 후 버전으로 관리
+- Accuracy보다 **오류 종류(FN)**를 먼저 본다
+- Rule은 Calibration에서 본 불량 유형까지만 막는다 → 다음 버전은 72 영역 ROI 검사
