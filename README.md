@@ -87,97 +87,30 @@ python src/XX_파일이름.py        # 일차별 실습 코드 실행 (프로젝
 - Accuracy보다 **오류 종류(FN)**를 먼저 본다
 - Rule은 Calibration에서 본 불량 유형까지만 막는다 → 다음 버전은 72 영역 ROI 검사
 
-## Day 06 — OCR 기반 제조 문자 검사
+## Day 06 — OCR 기반 제조 문자 검사 (SN · Ch.-B.)
 
-### 검사 대상
+### 목표
+제품에 인쇄된 문자를 OCR로 읽고, 형식(Regex)과 기대값(Expected SN)으로 검사해 OK / NG로 판정한다.
 
-제품에 인쇄된 13자리 SN
+### 실습 (13자리 SN · 40~48)
+| 단계 | 파일 | 결과 |
+|---|---|---|
+| 환경 확인 | `40` | Tesseract 5.5.0 · eng / kor / osd |
+| ROI · 공통 모듈 | `41` · `day06_ocr_utils.py` · `day06_ocr_validation.py` | 6장 SN ROI · OCR / 문자열 검사 함수 |
+| 전처리 비교 | `42` · `43` | original · gray 성공 / clahe · otsu · clahe_otsu 실패 |
+| Rule Freeze | `44` → `configs/day06_ocr_rules.json` | original · PSM 7 · 숫자 Whitelist · `^[0-9]{13}$` (v1.0) |
+| Batch · 평가 | `45` · `46` | OCR 6/6 · Inspection 6/6 · Expected Match 4/6 (교육용 NG 2장) |
+| 환경 변화 | `47` · `48` | Low Contrast만 성공 · Blur(빈 값) · Tilt(빈 값) · Tilt+Deskew(714) · Glare(29) 실패 |
 
-Mini Challenge:
-Ch.-B. 제품 코드
+### Mini Challenge (Ch.-B. 코드 · 49)
+- 새 사진 4장 · Whitelist A~Z·0~9·- · Regex `^[A-Z0-9-]+$`
+- 결과: 3 / 4 성공 · 실패 1장 `TI776224-2D` → `TI776224-20` (D→0, Format은 통과)
+- gray 재시도: 결과 동일 (TI776224-20) → 전처리만으로는 D/0 혼동이 해결되지 않음
+- 기록: `reports/day06_mini_challenge.md`
 
-
-### 사용 기술
-
-- OpenCV ROI
-- Gray / CLAHE / Otsu 비교
-- Tesseract OCR
-- pytesseract
-- PSM
-- Whitelist
-- Text Cleaning
-- Regex
-- Expected SN 비교
-- Deskew
-
-
-### 최종 OCR Rule
-
-Version: day06-ocr-v1.0
-
-Preprocess: original
-
-PSM: 7
-
-Whitelist: 0123456789
-
-Pattern: ^[0-9]{13}$
-
-
-### Batch 검사 결과
-
-검사 이미지: 6장
-
-OCR Exact Accuracy: 100%
-
-Inspection Accuracy: 100%
-
-OCR Failure: 없음
-
-Inspection Failure: 없음
-
-
-### 환경 변화 테스트
-
-Low Contrast: 성공
-
-Blur: 실패
-
-Tilt: 실패
-
-Tilt + Deskew: 실패
-
-Glare: 실패
-
-
-### Mini Challenge
-
-검사 대상: Ch.-B.
-
-OCR 성공:
-실습 결과 작성
-
-OCR 실패:
-실습 결과 작성
-
-
-### 주요 결과 파일
-
-- configs/day06_ocr_rules.json
-- reports/day06_preprocess_compare.csv
-- reports/day06_ocr_results.csv
-- reports/day06_ocr_metrics.md
-- reports/day06_challenge_results.csv
-- reports/day06_failure_analysis.md
-- reports/day06_mini_challenge_results.csv
-- reports/day06_mini_challenge.md
-
-
-### 오늘 확인한 핵심
-
-제품 이미지에서 필요한 문자 영역을 ROI로 선택하고,
-OCR로 읽은 문자열을 형식과 Expected Value로 검사하여
-OK / NG 판정으로 연결했습니다.
-
-또한 OCR이 정확하게 문자를 읽는 것과
-제품 자체가 정상인 것은 서로 다른 문제라는 것을 확인했습니다.
+### 배운 점
+- OCR이 정확히 읽는 것 ≠ 제품이 정상인 것 → OCR Accuracy와 Inspection Accuracy를 따로 본다
+- 사람 눈에 선명한 전처리가 OCR에 좋은 것은 아니다 → 실제 OCR 결과로 고른다
+- Regex는 형식만 본다 → 비슷한 문자로 바꿔 읽은 오류는 기대값 비교에서 잡힌다
+- 같은 Rule도 흐림 · 기울기 · 반사에서 실패한다 → 촬영환경 개선이 먼저
+- 자세한 기록: [failure_analysis](reports/day06_failure_analysis.md) · [ocr_metrics](reports/day06_ocr_metrics.md)
