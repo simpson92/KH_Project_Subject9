@@ -86,3 +86,98 @@ python src/XX_파일이름.py        # 일차별 실습 코드 실행 (프로젝
 - Test를 보고 기준을 바꾸면 Test가 아니다 → Rule은 Freeze 후 버전으로 관리
 - Accuracy보다 **오류 종류(FN)**를 먼저 본다
 - Rule은 Calibration에서 본 불량 유형까지만 막는다 → 다음 버전은 72 영역 ROI 검사
+
+## Day 06 — OCR 기반 제조 문자 검사
+
+### 검사 대상
+
+제품에 인쇄된 13자리 SN
+
+Mini Challenge:
+Ch.-B. 제품 코드
+
+
+### 사용 기술
+
+- OpenCV ROI
+- Gray / CLAHE / Otsu 비교
+- Tesseract OCR
+- pytesseract
+- PSM
+- Whitelist
+- Text Cleaning
+- Regex
+- Expected SN 비교
+- Deskew
+
+
+### 최종 OCR Rule
+
+Version: day06-ocr-v1.0
+
+Preprocess: original
+
+PSM: 7
+
+Whitelist: 0123456789
+
+Pattern: ^[0-9]{13}$
+
+
+### Batch 검사 결과
+
+검사 이미지: 6장
+
+OCR Exact Accuracy: 100%
+
+Inspection Accuracy: 100%
+
+OCR Failure: 없음
+
+Inspection Failure: 없음
+
+
+### 환경 변화 테스트
+
+Low Contrast: 성공
+
+Blur: 실패
+
+Tilt: 실패
+
+Tilt + Deskew: 실패
+
+Glare: 실패
+
+
+### Mini Challenge
+
+검사 대상: Ch.-B.
+
+OCR 성공:
+실습 결과 작성
+
+OCR 실패:
+실습 결과 작성
+
+
+### 주요 결과 파일
+
+- configs/day06_ocr_rules.json
+- reports/day06_preprocess_compare.csv
+- reports/day06_ocr_results.csv
+- reports/day06_ocr_metrics.md
+- reports/day06_challenge_results.csv
+- reports/day06_failure_analysis.md
+- reports/day06_mini_challenge_results.csv
+- reports/day06_mini_challenge.md
+
+
+### 오늘 확인한 핵심
+
+제품 이미지에서 필요한 문자 영역을 ROI로 선택하고,
+OCR로 읽은 문자열을 형식과 Expected Value로 검사하여
+OK / NG 판정으로 연결했습니다.
+
+또한 OCR이 정확하게 문자를 읽는 것과
+제품 자체가 정상인 것은 서로 다른 문제라는 것을 확인했습니다.
