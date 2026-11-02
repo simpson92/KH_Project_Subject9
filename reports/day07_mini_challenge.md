@@ -5,9 +5,9 @@ Rule: day07-anomaly-v1.0 (Threshold 0.067458, 변경 없음)
 
 | 변형 | 내가 정한 값 | 예상 | 실제 Score | 결과 |
 |---|---|---|---|---|
-| Dark | alpha = 0.75 | PASS / FP | 0.089038 | FP |
-| Blur | kernel = 7 | PASS / FP | 0.050097 | PASS |
-| Rotation | angle = 10° | PASS / FP | 0.046322 | PASS |
+| Dark | alpha = 0.75 | 기록 없음 | 0.089038 | FP |
+| Blur | kernel = 7 | 기록 없음 | 0.050097 | PASS |
+| Rotation | angle = 10° | 기록 없음 | 0.046322 | PASS |
 
 가장 Score가 높았던 조건:
 Dark (0.089038) — Threshold보다 0.0216 높음

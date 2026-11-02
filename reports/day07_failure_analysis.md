@@ -33,4 +33,20 @@ Threshold를 내리면 정상 FP가 크게 늘어나 Threshold만으로는 해�
 Score: 0.123438 (5가지 조건 중 가장 높음)
 
 원인 추정:
-제품은 정상이고 밝기만 바뀌었는데 Feature 전체가
+제품은 정상이고 밝기만 바뀌었는데 Feature 전체가 달라졌다.
+Bright(0.104316)와 Shift(0.076092)도 FP였다.
+Mini Challenge에서 덜 어둡게(alpha 0.75) 해도 0.089038로 FP였다 → 밝기 변화에 매우 민감하다.
+반면 Blur(0.065153)는 기준보다 0.002305 낮아 간신히 PASS였다.
+
+## 한 줄 정리
+
+현재 Baseline이 잘 동작한 경우:
+큰 파손(broken_large 20/20), 오염(contamination 21/21), 약한 Blur·회전(Rotation 6°: 0.054645, Mini 10°: 0.046322)
+
+현재 Baseline이 약했던 경우:
+작은 파손 4장 미검출(FN), 밝기 변화(Dark·Bright)와 위치 이동(Shift)에 따른 정상 오탐(FP)
+
+다음에 개선하고 싶은 점:
+1. 촬영 조명 고정 또는 밝기 정규화
+2. 평균 Feature Vector 대신 위치별 차이의 최댓값으로 판정하는 v1.1 검토
+   (Validation으로 새 Threshold를 정하고 v1.1로 Freeze한 뒤 다시 Test)
