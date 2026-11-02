@@ -34,3 +34,5 @@ roi_temp/*.jpg
 
 # Jupyter 노트북
 *.ipynb
+# Day07 generated feature data (52번 실행 시 다시 생성)
+artifacts/day07/

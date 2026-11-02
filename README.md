@@ -114,3 +114,11 @@ python src/XX_파일이름.py        # 일차별 실습 코드 실행 (프로젝
 - Regex는 형식만 본다 → 비슷한 문자로 바꿔 읽은 오류는 기대값 비교에서 잡힌다
 - 같은 Rule도 흐림 · 기울기 · 반사에서 실패한다 → 촬영환경 개선이 먼저
 - 자세한 기록: [failure_analysis](reports/day06_failure_analysis.md) · [ocr_metrics](reports/day06_ocr_metrics.md)
+
+### Day 07 — Anomaly Detection (진행 중: Test·Heatmap까지)
+- 배운 것: 정상만으로 기준을 만들고, 정상에서 벗어난 정도로 이상 판정 (MVTec AD bottle)
+- 코드: `50~58`, `day07_anomaly_core.py` (사전학습 ResNet18 layer3 Feature, Euclidean Distance)
+- 기준: Normal Train 167장 평균 → Validation 42장 95 Percentile → Threshold 0.067469 (`day07-anomaly-v1.0`)
+- 결과: Test 83장 Accuracy 0.9277 · Precision 0.9672 · Recall 0.9365 (TP 59 · TN 18 · FP 2 · FN 4)
+- 핵심: 큰 파손·오염은 전부 검출, broken_small 4장은 놓침(FN) → Heatmap으로 원인 확인
+- 다음: 촬영 조건 Challenge(59~60)와 Mini Challenge(61) 예정 · [reports/day07_test_metrics.md](reports/day07_test_metrics.md)
