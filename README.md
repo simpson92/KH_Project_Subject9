@@ -13,12 +13,14 @@ python src/XX_파일이름.py        # 일차별 실습 코드 실행 (프로젝
 
 ## 폴더 구조
 
-| 폴더 | 내용 | Git |
-|---|---|---|
-| `src/` | 실습 코드 (00~49) | O |
-| `reports/` | 일차별 실험 · 판단 기록 | O |
-| `samples/` | 입력 이미지 · 영상 | X |
-| `outputs/` | 코드 실행 결과 이미지 | X |
+| 폴더         | 내용                         | Git |
+|------------|----------------------------|-----|
+| `src/`     | 실습 코드 (00~61)              | O   |
+| `configs/` | Freeze한 판정 Rule (JSON)     | O   |
+| `reports/` | 일차별 실험 · 판단 기록             | O   |
+| `samples/` | 입력 이미지 · 영상                | X   |
+| `outputs/` | 코드 실행 결과 이미지               | X   |
+| `artifacts/` | 다시 만들 수 있는 생성 데이터 (정상 기준 .npz) | X   |
 
 ---
 
@@ -115,10 +117,38 @@ python src/XX_파일이름.py        # 일차별 실습 코드 실행 (프로젝
 - 같은 Rule도 흐림 · 기울기 · 반사에서 실패한다 → 촬영환경 개선이 먼저
 - 자세한 기록: [failure_analysis](reports/day06_failure_analysis.md) · [ocr_metrics](reports/day06_ocr_metrics.md)
 
-### Day 07 — Anomaly Detection (진행 중: Test·Heatmap까지)
-- 배운 것: 정상만으로 기준을 만들고, 정상에서 벗어난 정도로 이상 판정 (MVTec AD bottle)
-- 코드: `50~58`, `day07_anomaly_core.py` (사전학습 ResNet18 layer3 Feature, Euclidean Distance)
-- 기준: Normal Train 167장 평균 → Validation 42장 95 Percentile → Threshold 0.067469 (`day07-anomaly-v1.0`)
-- 결과: Test 83장 Accuracy 0.9277 · Precision 0.9672 · Recall 0.9365 (TP 59 · TN 18 · FP 2 · FN 4)
-- 핵심: 큰 파손·오염은 전부 검출, broken_small 4장은 놓침(FN) → Heatmap으로 원인 확인
-- 다음: 촬영 조건 Challenge(59~60)와 Mini Challenge(61) 예정 · [reports/day07_test_metrics.md](reports/day07_test_metrics.md)
+## Day 07 — Anomaly Detection (MVTec AD bottle)
+
+### 목표
+
+정상 이미지만으로 정상 기준을 만들고, 처음 보는 병이 그 기준에서 얼마나 벗어났는지(Anomaly Score)로 Normal / Anomaly를 판정한다.
+
+### 실습 (MVTec bottle · 50~60)
+
+| 단계 | 파일 | 결과 |
+|---|---|---|
+| 환경 · 데이터 | `50` · `51` | PyTorch 확인 · 정상 209장 → Train 167 / Validation 42, Test 83 (정상 20 · 이상 63) |
+| 공통 모듈 | `src/day07_anomaly_core.py` | 사전학습 ResNet18 layer3 Feature 추출 · 거리 계산 · Heatmap |
+| 정상 기준 | `52` | Train 167장 Feature 평균 → Vector (256,) · Map (256, 14, 14) |
+| Threshold | `53` · `54` | 정상 Validation Score로 90 / 95 / 99 Percentile 비교 |
+| Rule Freeze | `55` → `configs/day07_anomaly_rules.json` | 95 Percentile · Threshold 0.067458 (v1.0) |
+| Test · 평가 | `56` · `57` | TP 59 · TN 18 · FP 2 · FN 4 → Acc 0.9277 · Precision 0.9672 · Recall 0.9365 |
+| Heatmap | `58` | 대표 8장 Heatmap · Overlay와 Ground Truth Mask 비교 |
+| Challenge | `59` · `60` | 정상 1장 5조건 변형 → Dark · Bright · Shift FP / Blur · Rotation PASS |
+
+- 종류별: broken_large 20/20 · contamination 21/21 · broken_small 18/22 (FN 4) · good 18/20 (FP 2)
+
+### Mini Challenge (61)
+
+- 다른 정상 이미지(`001.png`)에 강도를 직접 정해 같은 Rule로 검사
+- Dark (alpha 0.75) 0.089038 **FP** · Blur (7) 0.050097 PASS · Rotation (10°) 0.046322 PASS
+- 덜 어둡게 해도 FP → 밝기 변화에 매우 민감
+- 기록: `reports/day07_mini_challenge.md`
+
+### 배운 점
+
+- 딥러닝(ResNet18)은 특징만 뽑고, 판정은 거리 + Threshold 규칙이 한다 → 모델은 학습하지 않았다
+- 작은 파손은 196칸 평균 Vector에서 차이가 희석되어 FN이 된다 → Threshold 조정만으로는 해결이 어렵다
+- 검사기는 '결함'이 아니라 '정상 사진과 다름'을 잰다 → 밝기·위치만 바뀌어도 정상이 FP가 된다
+- Test·Challenge 결과를 보고 Threshold를 바꾸지 않는다 → 개선은 Validation으로 다시 정해 v1.1로
+- 자세한 기록: [test_metrics](reports/day07_test_metrics.md) · [failure_analysis](reports/day07_failure_analysis.md) · [challenge_results](reports/day07_challenge_results.csv)
