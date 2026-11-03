@@ -36,3 +36,6 @@ roi_temp/*.jpg
 *.ipynb
 # Day07 generated feature data (52번 실행 시 다시 생성)
 artifacts/day07/
+
+# Day08 generated feature data (64·66번 실행 시 다시 생성)
+artifacts/day08/
