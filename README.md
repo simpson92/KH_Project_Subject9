@@ -152,3 +152,36 @@ python src/XX_파일이름.py        # 일차별 실습 코드 실행 (프로젝
 - 검사기는 '결함'이 아니라 '정상 사진과 다름'을 잰다 → 밝기·위치만 바뀌어도 정상이 FP가 된다
 - Test·Challenge 결과를 보고 Threshold를 바꾸지 않는다 → 개선은 Validation으로 다시 정해 v1.1로
 - 자세한 기록: [test_metrics](reports/day07_test_metrics.md) · [failure_analysis](reports/day07_failure_analysis.md) · [challenge_results](reports/day07_challenge_results.csv)
+
+## Day 08 — Low-Data Inspection (One-shot · Few-shot · Defect Generation)
+
+### 목표
+
+데이터가 적을 때(기준 1장 · 예제 몇 장 · 불량 부족) 쓸 수 있는 검사 방법을 같은 Query로 비교하고, 부족한 불량은 합성해서 품질을 확인한다.
+
+### 실습 (MVTec bottle · 62~69)
+
+| 단계 | 파일 | 결과 |
+|---|---|---|
+| 환경 · 데이터 | `62` · `63` | 원본 보존, 역할별 분리 · Data Leakage Check PASS |
+| 공통 모듈 | `src/day08_feature_core.py` | 사전학습 ResNet18(fc 제외) 512-D Feature · Cosine Similarity · Prototype |
+| One-shot | `64` · `65` | Reference 1장 + 정상 Calibration 20장 5 Percentile → Threshold 0.982105 · Acc 0.85 (FP 1 · FN 2) |
+| Few-shot | `66` · `67` | Normal · broken_small Support 5장씩 Prototype → Acc 0.90 (FP 0 · FN 2) |
+| 비교 | `68` | 같은 Common Query 20장(Normal 10 + broken_small 10) · sample_id 일치 확인 |
+| Defect Generation | `src/day08_cutpaste_core.py` · `69` | GT Mask로 Patch 추출 → Cut-Paste 20장 · 육안 QA Keep 후보 3 / Reject 17 |
+
+- Few-shot은 정상 오탐(FP)을 줄였지만, 불량 미검출(FN 2)은 그대로 남았다
+
+### Mini Challenge
+
+- Support 수: 1장 Acc 0.70 (FN 5) → 3장 0.80 (FN 4) → 5장 0.90 (FN 2), broken_small/000 · 007은 모두 FN
+- contamination Cut-Paste 5장: 같은 Patch 반복 · 원형 경계가 뚜렷해 Blending 필요
+- 기록: `reports/day08_mini_challenge.md`
+
+### 배운 점
+
+- 데이터 조건에 따라 방법을 고른다 → 정상 충분: Anomaly Detection / 기준 1장: One-shot / 소수 예제: Few-shot / 불량 부족: Defect Generation
+- 두 방법은 같은 Query로 비교해야 공정하다 → Support와 Query는 절대 겹치지 않게
+- Synthetic Data는 만들었다고 바로 쓰지 않는다 → 품질 확인(Domain Gap) 후 선택
+- broken_small/007은 7일차 · One-shot · Few-shot 모두에서 놓쳤다 → 방법보다 특징의 한계
+- 자세한 기록: [method_comparison](reports/day08_method_comparison.csv) · [synthetic_quality](reports/day08_synthetic_quality.md) · [mini_challenge](reports/day08_mini_challenge.md)

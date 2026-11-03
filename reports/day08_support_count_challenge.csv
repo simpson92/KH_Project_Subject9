@@ -1,0 +1,4 @@
+﻿support_count,accuracy,tp,tn,fp,fn,normal_support,anomaly_support,wrong_samples
+1,0.7,5,9,1,5,015.png,002.png,FP:normal/006.png FN:anomaly/broken_small/000.png FN:anomaly/broken_small/005.png FN:anomaly/broken_small/007.png FN:anomaly/broken_small/016.png FN:anomaly/broken_small/021.png
+3,0.8,6,10,0,4,015.png 045.png 140.png,002.png 010.png 013.png,FN:anomaly/broken_small/000.png FN:anomaly/broken_small/007.png FN:anomaly/broken_small/020.png FN:anomaly/broken_small/021.png
+5,0.9,8,10,0,2,015.png 045.png 140.png 152.png 182.png,002.png 010.png 013.png 017.png 019.png,FN:anomaly/broken_small/000.png FN:anomaly/broken_small/007.png
